@@ -2,4 +2,4 @@
 
 Religiously disallow things that cause slowness
 
-![Ashcroft](ashcroft.svg)
+![Ashcroft](https://rawgit.com/aslakhellesoy/ashcroft/logo/ashcroft.svg)
