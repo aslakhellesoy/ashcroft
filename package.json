@@ -1,0 +1,8 @@
+{
+  "name": "ashcroft",
+  "version": "1.0.0",
+  "description": "Religiously disallow things that cause slowness",
+  "main": "index.js",
+  "author": "Aslak Hellesøy",
+  "license": "MIT"
+}
