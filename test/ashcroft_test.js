@@ -24,6 +24,10 @@ describe('Ashcroft', () => {
   he("won't let you connect a Socket", () => {
     assert.throws(() => new net.Socket().connect(), error('connect'))
   })
+
+  he("won't let you access environment variables", () => {
+    assert.throws(() => process.env.NODE_ENV, error('env'))
+  })
 })
 
 const error = (fname) => err => {

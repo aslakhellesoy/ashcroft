@@ -15,7 +15,14 @@ function ashcroftify(obj, ...methodNames) {
   }
   const proxy = new Proxy(obj, handler)
   for (const methodName of methodNames) {
-    obj[methodName] = proxy[methodName]
+    if(typeof obj[methodName] === 'function') {
+      obj[methodName] = proxy[methodName]
+    } else {
+      // assume it's a getter
+      Object.defineProperty(obj, methodName, {
+        get: proxy[methodName]
+      })
+    }
   }
   return proxy
 }
@@ -23,6 +30,7 @@ function ashcroftify(obj, ...methodNames) {
 const Ashcroft = {
   enable: () => {
     ashcroftify(global, 'setTimeout', 'setInterval')
+    ashcroftify(process, 'env')
     ashcroftify(Stream.Writable.prototype, 'write')
     ashcroftify(net.Socket.prototype, 'connect')
   }
