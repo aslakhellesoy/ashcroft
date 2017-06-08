@@ -9,7 +9,7 @@ Religiously disallow things that cause slowness
      \
       \
 ```
-![Ashcroft](https://rawgit.com/aslakhellesoy/ashcroft/logo/ashcroft.svg)
+![Ashcroft](https://cdn.rawgit.com/aslakhellesoy/ashcroft/master/ashcroft.svg)
 
 ## About
 
