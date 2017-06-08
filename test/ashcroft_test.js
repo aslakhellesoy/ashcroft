@@ -1,5 +1,6 @@
 const assert = require('assert')
 const Stream = require('stream')
+const net = require('net')
 const Ashcroft = require('..')
 
 const he = it
@@ -18,6 +19,10 @@ describe('Ashcroft', () => {
   he("won't let you write to a stream", () => {
     const s = new Stream.Writable({write: (chunk, encoding, cb) => cb()})
     assert.throws(() => s.write(''), error('write'))
+  })
+
+  he("won't let you connect a Socket", () => {
+    assert.throws(() => new net.Socket().connect(), error('connect'))
   })
 })
 

@@ -1,4 +1,5 @@
 const Stream = require('stream')
+const net = require('net')
 
 function ashcroftify(obj, ...methodNames) {
   const handler = {
@@ -23,6 +24,7 @@ const Ashcroft = {
   enable: () => {
     ashcroftify(global, 'setTimeout', 'setInterval')
     ashcroftify(Stream.Writable.prototype, 'write')
+    ashcroftify(net.Socket.prototype, 'connect')
   }
 }
 
