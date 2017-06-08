@@ -50,19 +50,33 @@ It's not that this "outside world" isn't important - it is indeed. The thing is,
 you most of your tests should not test business logic and the outside world at
 the same time.
 
-This is one of the most common mistakes of junior developers, because they haven't
-yet learned how to make the tradeoffs between "get shit done fast now" and
-"get shit done fast forever".
+You will run *some* tests where the inner hexagon is fully integrated with the outer one,
+but there won't be many of them. We call this *integrated tests*. Examples are
+Cucumber scenarios that interact with Selenium which interacts with a webapp which
+interacts with all sorts of external services. I/O everywhere. Mayhem. Congratulations
+if you manage to remove all flickers from this volatile unpredictable world. If
+they flicker a lot, replace them with narrower, more focussed tests. A trickle
+of tests from the top of the [pyramid](https://martinfowler.com/bliki/TestPyramid.html) towards the bottom is often a sign of a team working in an outside-in fashion which,
+in my experience, tends to be better products.
 
-As it turns out, the process is easy to learn, and with patience and rigour,
-most codebases can be refactored safely towards such a design.
+You'll have *a few more* tests for all of the adapters.
+This is what we call *integration tests*. These tests don't test business logic.
+Instead they are connected to the same ports that the inner hexagon connects to,
+and only verify that the adapters work properly.
 
-The design is [Hexagonal Architecture](http://alistair.cockburn.us/Hexagonal+architecture),
+You'll have *lots* of unit tests for your inner hexagon, where your business
+logic is. Because the tests are so fast at this level, you can do
+\#subsecondtdd. This has a euphoric effect on some TDD practitioners. Happy programmers
+are the more productive ones.
+
+The design that makes this possible is [Hexagonal Architecture](http://alistair.cockburn.us/Hexagonal+architecture),
 also called "Ports and Adapters".
 [This article](http://www.dossier-andreas.net/software_architecture/ports_and_adapters.html)
 is a nice explanation.
 
-The "outside world" is the outer hexagon (where all the asynchronous operations, I/O and networking happens) as well as all the things on the networks outside (databases, message queues, web services etc.)
+In this model the "outside world" is the outer hexagon and everything outside it.
+All the asynchronous operations, I/O and networking that our application needs
+happens in the outer hexagon.
 
 With Ashcroft enabled, the outer hexagon is crippled, so tests for the inner hexagon
 will only pass if they don't depend directly on the outer hexagons. This helps you
