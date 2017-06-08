@@ -4,5 +4,11 @@
   "description": "Religiously disallow things that cause slowness",
   "main": "index.js",
   "author": "Aslak Hellesøy",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^3.4.2"
+  }
 }
