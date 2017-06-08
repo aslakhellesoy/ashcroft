@@ -1,3 +1,5 @@
+const Stream = require('stream')
+
 function ashcroftify(obj, ...methodNames) {
   const handler = {
     get(target, methodName) {
@@ -20,6 +22,7 @@ function ashcroftify(obj, ...methodNames) {
 const Ashcroft = {
   enable: () => {
     ashcroftify(global, 'setTimeout', 'setInterval')
+    ashcroftify(Stream.Writable.prototype, 'write')
   }
 }
 
