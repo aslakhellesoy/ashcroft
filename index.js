@@ -13,7 +13,7 @@ function ashcroftify(obj, ...methodNames) {
     }
   }
   const proxy = new Proxy(obj, handler)
-  for(const methodName of methodNames) {
+  for (const methodName of methodNames) {
     obj[methodName] = proxy[methodName]
   }
   return proxy

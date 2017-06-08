@@ -2,7 +2,7 @@ const assert = require('assert')
 const Stream = require('stream')
 const Ashcroft = require('..')
 
-const he=it
+const he = it
 
 Ashcroft.enable()
 
