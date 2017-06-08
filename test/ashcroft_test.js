@@ -8,30 +8,20 @@ Ashcroft.enable()
 
 describe('Ashcroft', () => {
   he("won't let you setTimeout", () => {
-    try {
-      setTimeout(() => null, 1)
-      throw new Error('should have failed')
-    } catch (e) {
-      assert.equal("setTimeout - you can't do that", e.message)
-    }
+    assert.throws(() => setTimeout(() => null, 1), error('setTimeout'))
   })
 
   he("won't let you setInterval", () => {
-    try {
-      setInterval(() => null, 1)
-      throw new Error('should have failed')
-    } catch (e) {
-      assert.equal("setInterval - you can't do that", e.message)
-    }
+    assert.throws(() => setInterval(() => null, 1), error('setInterval'))
   })
 
   he("won't let you write to a stream", () => {
     const s = new Stream.Writable({write: (chunk, encoding, cb) => cb()})
-    try {
-      s.write('')
-      throw new Error('should have failed')
-    } catch (e) {
-      assert.equal("write - you can't do that", e.message)
-    }
+    assert.throws(() => s.write(''), error('write'))
   })
 })
+
+const error = (fname) => err => {
+  assert.equal(`${fname} - you can't do that`, err.message)
+  return true
+}
