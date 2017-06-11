@@ -1,6 +1,8 @@
 const stream = require('stream')
 const net = require('net')
 
+var resets = []
+
 const Ashcroft = {
   ban: (obj, ...methodNames) => {
     const handler = {
@@ -16,8 +18,17 @@ const Ashcroft = {
     }
     const proxy = new Proxy(obj, handler)
 
+    const orig = {}
+    const reset = () => {
+      for (const methodName of methodNames) {
+        obj[methodName] = orig[methodName]
+      }
+    }
+
     // Reassign original methods
     for (const methodName of methodNames) {
+      orig[methodName] = obj[methodName]
+
       if(typeof obj[methodName] === 'function') {
         obj[methodName] = proxy[methodName]
       } else {
@@ -27,13 +38,20 @@ const Ashcroft = {
         })
       }
     }
+
+    return reset
   },
 
   banAll: () => {
-    Ashcroft.ban(global, 'setTimeout', 'setInterval', 'setImmediate')
-    Ashcroft.ban(process, 'env')
-    Ashcroft.ban(stream.Writable.prototype, 'write')
-    Ashcroft.ban(net.Socket.prototype, 'connect')
+    resets = []
+    resets.push(Ashcroft.ban(global, 'setTimeout', 'setInterval', 'setImmediate'))
+    //resets.push(Ashcroft.ban(process, 'env'))
+    resets.push(Ashcroft.ban(stream.Writable.prototype, 'write'))
+    resets.push(Ashcroft.ban(net.Socket.prototype, 'connect'))
+  },
+
+  resetAll: () => {
+    resets.forEach(reset => reset())
   }
 }
 
