@@ -3,11 +3,13 @@ const stream = require('stream')
 const net = require('net')
 const Ashcroft = require('..')
 
+const ashcroft = new Ashcroft()
+
 const configs = [
   {
     name: 'Ashcroft',
-    before: () => Ashcroft.banAll(),
-    after: () => Ashcroft.resetAll(),
+    before: () => ashcroft.ban(),
+    after: () => ashcroft.unban(),
     prefix: "won't",
     check: checkError
   },
@@ -45,7 +47,11 @@ configs.forEach(({name, before, after, prefix, check}) => {
     })
 
     it(`${prefix} let you connect a Socket`, () => {
-      check(() => new net.Socket().connect(), 'connect')
+      check(() => {
+        const socket = new net.Socket()
+        socket.on('error', () => undefined)
+        socket.connect()
+      }, 'connect')
     })
 
     xit(`${prefix} let you access environment variables`, () => {

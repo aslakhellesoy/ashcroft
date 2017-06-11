@@ -1,10 +1,22 @@
 const stream = require('stream')
 const net = require('net')
 
-var resets = []
+class Ashcroft {
+  constructor(bans) {
+    bans = bans || [
+      [global, 'setTimeout', 'setInterval', 'setImmediate'],
+      [stream.Writable.prototype, 'write'],
+      [net.Socket.prototype, 'connect']
+    ]
+    this._bans = bans
+    this._unbanners = []
+  }
 
-const Ashcroft = {
-  ban: (obj, ...methodNames) => {
+  ban() {
+    this._bans.forEach(ban => this._banObject(ban[0], ban.slice(1)))
+  }
+
+  _banObject(obj, methodNames) {
     const handler = {
       get(target, methodName) {
         const origMethod = target[methodName]
@@ -18,18 +30,13 @@ const Ashcroft = {
     }
     const proxy = new Proxy(obj, handler)
 
-    const orig = {}
-    const reset = () => {
-      for (const methodName of methodNames) {
-        obj[methodName] = orig[methodName]
-      }
-    }
-
-    // Reassign original methods
     for (const methodName of methodNames) {
-      orig[methodName] = obj[methodName]
+      const orig = obj[methodName]
 
-      if(typeof obj[methodName] === 'function') {
+      const unbanner = () => obj[methodName] = orig
+      this._unbanners.push(unbanner)
+
+      if(typeof orig === 'function') {
         obj[methodName] = proxy[methodName]
       } else {
         // assume it's a getter
@@ -38,20 +45,10 @@ const Ashcroft = {
         })
       }
     }
+  }
 
-    return reset
-  },
-
-  banAll: () => {
-    resets = []
-    resets.push(Ashcroft.ban(global, 'setTimeout', 'setInterval', 'setImmediate'))
-    //resets.push(Ashcroft.ban(process, 'env'))
-    resets.push(Ashcroft.ban(stream.Writable.prototype, 'write'))
-    resets.push(Ashcroft.ban(net.Socket.prototype, 'connect'))
-  },
-
-  resetAll: () => {
-    resets.forEach(reset => reset())
+  unban() {
+    this._unbanners.forEach(unbanner => unbanner())
   }
 }
 
