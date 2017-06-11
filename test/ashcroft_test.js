@@ -3,36 +3,48 @@ const stream = require('stream')
 const net = require('net')
 const Ashcroft = require('..')
 
-const he = it
-
 Ashcroft.banAll()
 
-const check = checkError
+const configs = [
+  {
+    name: 'Ashcroft',
+    prefix: "won't",
+    check: checkError
+  },
+  // {
+  //   name: 'Vanilla Node',
+  //   prefix: "will",
+  //   check: checkNoError
+  // }
+]
 
-describe('Ashcroft', () => {
-  he("won't let you setTimeout", () => {
-    check(() => setTimeout(() => null, 0), 'setTimeout')
-  })
+configs.forEach(({name, prefix, check}) => {
+  describe(name, () => {
 
-  he("won't let you setInterval", () => {
-    check(() => setInterval(() => null, 0), 'setInterval')
-  })
+    it(`${prefix} let you setTimeout`, () => {
+      check(() => setTimeout(() => null, 0), 'setTimeout')
+    })
 
-  he("won't let you setImmediate", () => {
-    check(() => setImmediate(() => null, 0), 'setImmediate')
-  })
+    it(`${prefix} let you setInterval`, () => {
+      check(() => setInterval(() => null, 0), 'setInterval')
+    })
 
-  he("won't let you write to a stream", () => {
-    const s = new stream.Writable({write: (chunk, encoding, cb) => cb()})
-    check(() => s.write(''), 'write')
-  })
+    it(`${prefix} let you setImmediate`, () => {
+      check(() => setImmediate(() => null, 0), 'setImmediate')
+    })
 
-  he("won't let you connect a Socket", () => {
-    check(() => new net.Socket().connect(), 'connect')
-  })
+    it(`${prefix} let you write to a stream`, () => {
+      const s = new stream.Writable({write: (chunk, encoding, cb) => cb()})
+      check(() => s.write(''), 'write')
+    })
 
-  he("won't let you access environment variables", () => {
-    check(() => process.env.NODE_ENV, 'env')
+    it(`${prefix} let you connect a Socket`, () => {
+      check(() => new net.Socket().connect(), 'connect')
+    })
+
+    it(`${prefix} let you access environment variables`, () => {
+      check(() => process.env.NODE_ENV, 'env')
+    })
   })
 })
 
@@ -41,4 +53,8 @@ function checkError(fn, fname) {
     assert.equal(`${fname} - you can't do that`, err.message)
     return true
   })
+}
+
+function checkNoError(fn, fname) {
+  fn()
 }
