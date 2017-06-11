@@ -102,7 +102,7 @@ yarn add --dev ashcroft
 
 ```javascript
 const Ashcroft = require('ashcroft')
-Ashcroft.enable()
+Ashcroft.banAll()
 ```
 
 ### Mocha / Cucumber
