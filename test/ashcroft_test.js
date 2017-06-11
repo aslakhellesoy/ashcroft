@@ -7,34 +7,38 @@ const he = it
 
 Ashcroft.banAll()
 
+const check = checkError
+
 describe('Ashcroft', () => {
   he("won't let you setTimeout", () => {
-    assert.throws(() => setTimeout(() => null, 1), error('setTimeout'))
+    check(() => setTimeout(() => null, 1), 'setTimeout')
   })
 
   he("won't let you setInterval", () => {
-    assert.throws(() => setInterval(() => null, 1), error('setInterval'))
+    check(() => setInterval(() => null, 1), 'setInterval')
   })
 
   he("won't let you setImmediate", () => {
-    assert.throws(() => setImmediate(() => null, 1), error('setImmediate'))
+    check(() => setImmediate(() => null, 1), 'setImmediate')
   })
 
   he("won't let you write to a stream", () => {
     const s = new stream.Writable({write: (chunk, encoding, cb) => cb()})
-    assert.throws(() => s.write(''), error('write'))
+    check(() => s.write(''), 'write')
   })
 
   he("won't let you connect a Socket", () => {
-    assert.throws(() => new net.Socket().connect(), error('connect'))
+    check(() => new net.Socket().connect(), 'connect')
   })
 
   he("won't let you access environment variables", () => {
-    assert.throws(() => process.env.NODE_ENV, error('env'))
+    check(() => process.env.NODE_ENV, 'env')
   })
 })
 
-const error = (fname) => err => {
-  assert.equal(`${fname} - you can't do that`, err.message)
-  return true
+function checkError(fn, fname) {
+  assert.throws(fn, err => {
+    assert.equal(`${fname} - you can't do that`, err.message)
+    return true
+  })
 }

@@ -15,6 +15,8 @@ const Ashcroft = {
       }
     }
     const proxy = new Proxy(obj, handler)
+
+    // Reassign original methods
     for (const methodName of methodNames) {
       if(typeof obj[methodName] === 'function') {
         obj[methodName] = proxy[methodName]
@@ -25,7 +27,6 @@ const Ashcroft = {
         })
       }
     }
-    return proxy
   },
 
   banAll: () => {
