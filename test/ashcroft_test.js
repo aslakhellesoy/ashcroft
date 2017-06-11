@@ -16,6 +16,10 @@ describe('Ashcroft', () => {
     assert.throws(() => setInterval(() => null, 1), error('setInterval'))
   })
 
+  he("won't let you setImmediate", () => {
+    assert.throws(() => setImmediate(() => null, 1), error('setImmediate'))
+  })
+
   he("won't let you write to a stream", () => {
     const s = new stream.Writable({write: (chunk, encoding, cb) => cb()})
     assert.throws(() => s.write(''), error('write'))

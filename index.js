@@ -29,7 +29,7 @@ const Ashcroft = {
   },
 
   banAll: () => {
-    Ashcroft.ban(global, 'setTimeout', 'setInterval')
+    Ashcroft.ban(global, 'setTimeout', 'setInterval', 'setImmediate')
     Ashcroft.ban(process, 'env')
     Ashcroft.ban(stream.Writable.prototype, 'write')
     Ashcroft.ban(net.Socket.prototype, 'connect')
