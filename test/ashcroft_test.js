@@ -11,15 +11,15 @@ const check = checkError
 
 describe('Ashcroft', () => {
   he("won't let you setTimeout", () => {
-    check(() => setTimeout(() => null, 1), 'setTimeout')
+    check(() => setTimeout(() => null, 0), 'setTimeout')
   })
 
   he("won't let you setInterval", () => {
-    check(() => setInterval(() => null, 1), 'setInterval')
+    check(() => setInterval(() => null, 0), 'setInterval')
   })
 
   he("won't let you setImmediate", () => {
-    check(() => setImmediate(() => null, 1), 'setImmediate')
+    check(() => setImmediate(() => null, 0), 'setImmediate')
   })
 
   he("won't let you write to a stream", () => {
